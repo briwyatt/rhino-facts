@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
+	"io/ioutil"
 	"strconv"
 	"github.com/gocolly/colly"
 )
@@ -48,10 +48,21 @@ func main() {
 	collector.Visit("https://www.factretriever.com/rhino-facts")
 
 
-	enc := json.NewEncoder(os.Stdout)
+	// enc := json.NewEncoder(os.Stdout)
 
-	enc.SetIndent("", " ")
-	enc.Encode(allFacts)
+	// enc.SetIndent("", " ")
+	// enc.Encode(allFacts)
+	writeJSON(allFacts)
+}
 
 
+func writeJSON(data []Fact) {
+	file, err := json.MarshalIndent(data, "", " ")
+	if err != nil {
+		log.Println("Unable to create JSON file")
+		return
+	}
+
+
+	_ = ioutil.WriteFile("rhinofacts.json", file, 0644)
 }
